@@ -14,14 +14,18 @@ public class Artista {
     private String nome;
     private String detalhe;
     private String instagram;
+    private String urlFotoHome;
+    private String urlFotoDetalhe;
     private boolean habilitado;
 
     public Artista(){}
 
-    public Artista(String nome, String detalhe, String instagram, boolean habilitado) {
+    public Artista(String nome, String detalhe, String instagram, String urlFotoHome, String urlFotoDetalhe, boolean habilitado) {
         this.nome = nome;
         this.detalhe = detalhe;
         this.instagram = instagram;
+        this.urlFotoHome = urlFotoHome;
+        this.urlFotoDetalhe = urlFotoDetalhe;
         this.habilitado = true;
     }
 
@@ -29,6 +33,8 @@ public class Artista {
         this.nome = artistaDto.nome();
         this.detalhe = artistaDto.detalhe();
         this.instagram = artistaDto.instagram();
+        this.urlFotoHome = artistaDto.urlFotoHome();
+        this.urlFotoDetalhe = artistaDto.urlFotoDetalhe();
         this.habilitado = true;
     }
 
@@ -58,6 +64,22 @@ public class Artista {
 
     public void setInstagram(String instagram) {
         this.instagram = instagram;
+    }
+
+    public String getUrlFotoHome() {
+        return urlFotoHome;
+    }
+
+    public void setUrlFotoHome(String urlFotoHome) {
+        this.urlFotoHome = urlFotoHome;
+    }
+
+    public String getUrlFotoDetalhe() {
+        return urlFotoDetalhe;
+    }
+
+    public void setUrlFotoDetalhe(String urlFotoDetalhe) {
+        this.urlFotoDetalhe = urlFotoDetalhe;
     }
 
     public boolean getHabilitado() {

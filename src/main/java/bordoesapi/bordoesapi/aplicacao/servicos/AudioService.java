@@ -51,7 +51,7 @@ public class AudioService {
     public AudioDto save(AudioDto audioDto) {
         try {
             if(audioDto == null){
-                throw  new RuntimeException("Não é permitido salver um Audio nulo!");
+                throw  new RuntimeException("Não é permitido salvar um Audio nulo!");
             }
 
             Artista artista = artistaPersistencia.getById(audioDto.idArtista());

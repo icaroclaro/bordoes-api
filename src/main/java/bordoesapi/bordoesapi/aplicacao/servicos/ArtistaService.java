@@ -43,7 +43,7 @@ public class ArtistaService {
     public ArtistaDto save(ArtistaDto artistaDto) {
         try {
             if(artistaDto == null){
-                throw  new RuntimeException("Não é permitido salver um artista nulo!");
+                throw  new RuntimeException("Não é permitido salvar um artista nulo!");
             }
             Artista artista = new Artista(artistaDto);
             artistaPersistencia.save(artista);
@@ -69,6 +69,8 @@ public class ArtistaService {
             artista.setNome(artistaDto.nome());
             artista.setDetalhe(artistaDto.detalhe());
             artista.setInstagram(artistaDto.instagram());
+            artista.setUrlFotoHome(artista.getUrlFotoHome());
+            artista.setUrlFotoDetalhe(artista.getUrlFotoDetalhe());
             artista.setHabilitado(artistaDto.habilitao());
 
             artistaPersistencia.update(artista);
