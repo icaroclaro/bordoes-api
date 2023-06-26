@@ -1,17 +1,32 @@
 package com.bordoes.api.controllers;
 
 import com.bordoes.aplicacao.dto.AudioDto;
+import com.bordoes.aplicacao.dto.AudioUploadDto;
 import com.bordoes.aplicacao.servicos.AudioService;
+import com.bordoes.dominio.entidade.Audio;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
-@RequestMapping("/audios")
+@RequestMapping(value = "/audios", produces = {"application/json"})
+@Slf4j
 public class AudioController {
+
+    @Value("${file.upload-dir}")
+    private String localDeArmazenamento;
 
     @Autowired
     private AudioService audioService;
@@ -32,6 +47,20 @@ public class AudioController {
         AudioDto audio = audioService.save(audioDto);
         var uri = uriBuilder.path("/medicos/{id}").buildAndExpand(audio.id()).toUri();
         return ResponseEntity.created(uri).body(audio);
+    }
+
+    @PostMapping("/arquivo")
+    public ResponseEntity<AudioDto> salvarArquivo(@ModelAttribute AudioUploadDto audioUploadDto, UriComponentsBuilder uriBuilder){
+   // public ResponseEntity<AudioDto> salvarArquivo(@ModelAttribute AudioUploadDto audioUploadDto, @RequestParam("arquivo") MultipartFile arquivoDeAudio){
+        AudioDto audio = audioService.save2(audioUploadDto);
+        var uri = uriBuilder.path("/medicos/{id}").buildAndExpand(audio.id()).toUri();
+        return ResponseEntity.created(uri).body(audio);
+ //       return ResponseEntity.ok(new AudioDto(1,1,"","",10.0));
+    }
+
+    private String extrarirExtensao(String nomeArquivo) { //metodo que estrai a extensão
+        int i = nomeArquivo.lastIndexOf(".");
+        return nomeArquivo.substring(i + 1);
     }
 
     @PutMapping

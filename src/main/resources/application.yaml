@@ -1,3 +1,5 @@
+file: #para salvar aquivo
+  upload-dir: /Users/4960022981/Desktop/arquivos-api-upload/
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -12,6 +14,12 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.MySQL8Dialect
     show-sql: true
+  servelet: #para salvar arquivos
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 50MB
+      max-request0size: 60MB
 server:
   error:
     include-stacktrace: never

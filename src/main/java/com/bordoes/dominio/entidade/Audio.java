@@ -2,6 +2,7 @@ package com.bordoes.dominio.entidade;
 
 import com.bordoes.aplicacao.dto.AudioDto;
 import jakarta.persistence.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Objects;
 
@@ -17,6 +18,7 @@ public class Audio {
     private Artista artista;
     private String descricao;
     private String urlAudio;
+    //private MultipartFile audio;
     private double preco;
 
     public Audio(){}
@@ -61,6 +63,16 @@ public class Audio {
     public void setUrlAudio(String urlAudio) {
         this.urlAudio = urlAudio;
     }
+
+    /*
+    public MultipartFile getAudio() {
+        return audio;
+    }
+
+    public void setAudio(MultipartFile audio) {
+        this.audio = audio;
+    }
+    */
 
     public double getPreco() {
         return preco;
