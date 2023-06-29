@@ -12,5 +12,34 @@ services:
     volumes:
       - db_data:/var/lib/mysql
 
+  localstack:
+    container_name: agent-localstack
+    image: localstack/localstack:1.0.2
+    ports:
+      - "127.0.0.1:4566:4566"
+      - "127.0.0.1:4571:4571"
+    networks:
+      - local_network
+    environment:
+      - HTTP_PROXY=
+      - HTTPS_PROXY=
+      - NO_PROXY=localhost,0.0.0.0,127.0.0.1,localstack
+      - no_proxy=localhost,0.0.0.0,127.0.0.1,localstack
+      - AWS_DEFAULT_REGION=sa-east-1
+      - DYNAMODB_SHARE_DB=1
+      - PYTHONHTTPSVERIFY=0
+      - SERVICES=${SERVICES- }
+      - DEBUG=${DEBUG- }
+      - DATA_DIR=${DATA_DIR- }
+      - LOCALSTACK_API_KEY=${LOCALSTACK_API_KEY- }
+      - INIT_SCRIPT_PATH=/root/init
+      - SKIP_SSL_CERT_DOWNLOAD=1
+      - PROVIDER_OVERRIDE_SQS=LEGACY
+    volumes:
+      - "./tests/localstack:/root/init"
+
+networks:
+  local_network:
+
 volumes:
   db_data:

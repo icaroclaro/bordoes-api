@@ -10,11 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -26,6 +25,9 @@ public class AudioService {
     private AudioPersistencia audioPersistencia;
     @Autowired
     private ArtistaPersistencia artistaPersistencia;
+
+    @Autowired
+    private AWSService awsService;
 
     @Value("${file.upload-dir}")
     private String localDeArmazenamento;
@@ -79,8 +81,7 @@ public class AudioService {
         }
     }
 
-    public AudioDto save2 (AudioUploadDto audioUploadDto) {
-    //public AudioDto save2 (AudioUploadDto audioDto) {
+    public AudioDto saveWithFile(AudioUploadDto audioUploadDto) {
         try {
             String nomeDoAudio = StringUtils.cleanPath(audioUploadDto.audio().getOriginalFilename());
             AudioDto audioDto = new AudioDto(audioUploadDto, nomeDoAudio);
@@ -89,7 +90,17 @@ public class AudioService {
                 throw new RuntimeException("Desculpa nome do arquivo contem sequencia de caminho invalido " +  nomeDoAudio);
             }
             var caminho = localDeArmazenamento + UUID.randomUUID() + "." + extrarirExtensao(audioUploadDto.audio().getOriginalFilename());
-            Files.copy(audioUploadDto.audio().getInputStream(), Path.of(caminho), StandardCopyOption.REPLACE_EXISTING);
+
+            //Files.copy(audioUploadDto.audio().getInputStream(), Path.of(caminho), StandardCopyOption.REPLACE_EXISTING);
+            /*
+            File file = new File(audioUploadDto.audio().getOriginalFilename());
+            try (OutputStream outputStream = new FileOutputStream(file)) {
+                outputStream.write(audioUploadDto.audio().getBytes());
+            }
+            */
+
+            //awsService.uploadFileBucketS3(audioUploadDto.audio(), "audio\\" + nomeDoAudio);
+            awsService.uploadFileBucketS3(audioUploadDto.audio(), nomeDoAudio);
 
             if(audioDto == null){
                 throw  new RuntimeException("Não é permitido salvar um Audio nulo!");
@@ -100,8 +111,8 @@ public class AudioService {
                 throw new RuntimeException("Nenhum Artista encontrado para este ID!");
             }
 
-            Audio audio = new Audio(artista,audioDto.descricao(), nomeDoAudio, audioDto.preco());
-            audio.setUrlAudio(nomeDoAudio);
+            Audio audio = new Audio(artista,audioDto.descricao(), caminho, audioDto.preco());
+            //audio.setUrlAudio(caminho);
             audioPersistencia.save(audio);
             AudioDto dto = new AudioDto(audio);
             return dto;

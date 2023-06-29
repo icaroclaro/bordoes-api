@@ -3,22 +3,14 @@ package com.bordoes.api.controllers;
 import com.bordoes.aplicacao.dto.AudioDto;
 import com.bordoes.aplicacao.dto.AudioUploadDto;
 import com.bordoes.aplicacao.servicos.AudioService;
-import com.bordoes.dominio.entidade.Audio;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/audios", produces = {"application/json"})
@@ -49,10 +41,10 @@ public class AudioController {
         return ResponseEntity.created(uri).body(audio);
     }
 
-    @PostMapping("/arquivo")
+    @PostMapping("/arquivoDeAudio")
     public ResponseEntity<AudioDto> salvarArquivo(@ModelAttribute AudioUploadDto audioUploadDto, UriComponentsBuilder uriBuilder){
    // public ResponseEntity<AudioDto> salvarArquivo(@ModelAttribute AudioUploadDto audioUploadDto, @RequestParam("arquivo") MultipartFile arquivoDeAudio){
-        AudioDto audio = audioService.save2(audioUploadDto);
+        AudioDto audio = audioService.saveWithFile(audioUploadDto);
         var uri = uriBuilder.path("/medicos/{id}").buildAndExpand(audio.id()).toUri();
         return ResponseEntity.created(uri).body(audio);
  //       return ResponseEntity.ok(new AudioDto(1,1,"","",10.0));
